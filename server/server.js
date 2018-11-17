@@ -1,58 +1,71 @@
+/* eslint-env node */
 /* eslint-disable strict, global-require */
-
 'use strict'
+
+
+
+
 
 // Import variables from .env file.
 require('dotenv').config()
 
-const isDev = process.env.NODE_ENV !== 'production'
 
-/******************************************************************************\
- Module imports
- \******************************************************************************/
 
-const koa = new (require('koa'))
+
+// Module imports
+const Koa = require('koa')
 const path = require('path')
+const next = require('next')
 
-const next = require('next')({
-  dev: isDev,
-  dir: path.resolve('.'),
+
+
+
+
+// Component imports
+const env = require('./environment')
+
+
+
+
+
+// Constants
+const server = new Koa()
+const app = next({
+  dev: env.isDev,
+  dir: path.resolve('client'),
 })
 
-const config = require('./config')
 
 
 
 
+app.prepare().then(() => {
+  // Rewrite URLS to remove trailing slashes
+  server.use(require('koa-no-trailing-slash')())
 
-/******************************************************************************\
-  Initialize the app
-\******************************************************************************/
+  // Set up file logger
+  if (env.isDev) {
+    server.use(require('./middlewares/dev-logger')())
+  }
 
-next.prepare()
-  .then(() => {
-    // Set up the loggers
-    if (isDev) {
-      require('./config/file-logger')(koa)
-    }
+  // Set up console logger
+  server.use(require('koa-logger')())
 
-    koa.use(require('koa-no-trailing-slash')())
+  // Add CSP
+  server.use(require('./middlewares/csp')(env.isDev))
 
-    koa.use(require('koa-logger')())
+  // Add proxies
+  require('./middlewares/proxy')(server, env)
 
-    // Configure proxies
-    require('./config/proxy')(koa, config)
+  // Compress responses
+  server.use(require('koa-compress')())
 
-    // Compress responses
-    koa.use(require('koa-compress')())
+  // Parse request bodies
+  server.use(require('koa-body')())
 
-    // Parse request bodies
-    koa.use(require('koa-body')())
+  // Add routes
+  require('./middlewares/router')(app, server)
 
-    // Configure the router
-    require('./config/router')(next, koa, config)
-
-    // Start the server
-    //  console.log('Listening on port', process.env.PORT || 3000)
-    koa.listen(process.env.PORT || 3000)
-  })
+  // Start the server
+  server.listen(env.port)
+})
