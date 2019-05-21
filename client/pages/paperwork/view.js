@@ -150,9 +150,7 @@ class Paperwork extends Component {
     if (status === 'inactive') {
       status = 'open'
       outcome = 'inactive'
-    }
-
-    if (status === 'open') {
+    } else if (status === 'open') {
       outcome = 'active'
     }
 
@@ -312,7 +310,7 @@ class Paperwork extends Component {
     const { id: rescueId } = ownProps.query
 
     return {
-      rats: selectRatsByRescueId(state, { rescueId }),
+      rats: selectRatsByRescueId(state, { rescueId }) || [],
       rescue: selectRescueById(state, { rescueId }),
       currentUser: selectUser(state),
       currentUserGroups: selectUserGroups(state),
