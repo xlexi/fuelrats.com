@@ -30,8 +30,73 @@
     content: attr(data-loader-text);
   }
 
-  &.expanded .ship-expand-button svg {
-    transform: rotate(180deg);
+  &.expanded {
+    .ship-expand-button svg {
+      transform: rotate(180deg);
+    }
+
+    .ships {
+      max-height: 100vh;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+
+      opacity: 1;
+    }
+  }
+
+  .ships {
+    display: grid;
+
+    grid-template-columns: [id] max-content [name] 1fr [type] max-content [controls] max-content;
+
+    max-height: 0;
+
+    font-size: 0.8em;
+
+    opacity: 0;
+
+    overflow: none;
+
+    padding-top: 0;
+    padding-bottom: 0;
+
+    transition: max-height 0.3s, opacity 0.3s, padding 0.3s;
+
+    > * {
+      padding: 0 0.5rem;
+    }
+
+    .id {
+      grid-column: id;
+
+      padding-left: 0;
+
+      font-family: monospace;
+    }
+
+    .name {
+      grid-column: name;
+    }
+
+    .type {
+      grid-column: type;
+
+      opacity: 0.5;
+    }
+
+    .controls {
+      align-self: center;
+
+      padding: 0;
+    }
+
+    .add-ship {
+      grid-column: name;
+
+      text-transform: uppercase;
+
+      cursor: pointer;
+    }
   }
 
   header {
@@ -94,6 +159,7 @@
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 30;
 
       justify-content: center;
 

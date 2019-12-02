@@ -1,7 +1,7 @@
 // Module imports
 import React from 'react'
 import PropTypes from 'prop-types'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 
@@ -20,6 +20,7 @@ import classNames from '../../helpers/classNames'
 import CardControls from '../CardControls'
 import DefaultRatButton from './DefaultRatButton'
 import InlineEditSpan from '../InlineEditSpan'
+import RatShipLine from './RatShipLine'
 
 
 
@@ -185,7 +186,7 @@ class RatCard extends React.Component {
 
     const {
       rat,
-      // ships,
+      ships,
       rescueCount,
     } = this.props
 
@@ -238,11 +239,11 @@ class RatCard extends React.Component {
             <span className="rat-platform">{rat.attributes.platform.toUpperCase()}</span>
           </div>
         </header>
-        {/* Disabled until ships are fully implemented
-        <div className="panel-content">
-          ships.
+        <div className="panel-content ships">
+          {ships.map((ship) => <RatShipLine key={ship.id} ship={ship} />)}
+          <a className="add-ship">Add ship</a>
         </div>
-        */}
+
         <footer className="panel-content">
           <div className="rat-stats">
             <small>
@@ -254,16 +255,18 @@ class RatCard extends React.Component {
               {createdAt}
             </small>
           </div>
-          {/* Disabled until ships are fully implemented
+
           <div className="rat-ships-expander">
             <button
               className="inline ship-expand-button"
               type="button"
+              name={shipsExpanded ? 'Hide ships' : 'Show ships'}
+              title={shipsExpanded ? 'Hide ships' : 'Show ships'}
               onClick={this._handleExpandShips}>
               <FontAwesomeIcon icon="angle-down" fixedWidth />
             </button>
           </div>
-          */}
+
           <CardControls
             canDelete={userHasMultipleRats && !ratIsDisplayRat}
             canSubmit={this.canSubmit}
