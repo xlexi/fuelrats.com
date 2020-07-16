@@ -97,6 +97,7 @@ class DisableProfileModal extends React.Component {
       })
     } else {
       this.props.onClose()
+      this.props.logout()
     }
   }
 
@@ -199,7 +200,7 @@ class DisableProfileModal extends React.Component {
     Redux Properties
   \***************************************************************************/
 
-  static mapDispatchToProps = ['updateUser']
+  static mapDispatchToProps = ['logout', 'updateUser']
   static mapStateToProps = (state) => {
     return {
       user: withCurrentUserId(selectUserById)(state),
