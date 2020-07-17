@@ -2,6 +2,7 @@ import { HttpStatus } from '@fuelrats/web-util/http'
 import { isError } from 'flux-standard-action'
 import React from 'react'
 
+import { Router } from '~/routes'
 import { connect } from '~/store'
 import { selectUserById, withCurrentUserId } from '~/store/selectors'
 
@@ -98,6 +99,7 @@ class DisableProfileModal extends React.Component {
     } else {
       this.props.onClose()
       this.props.logout()
+      Router.pushRoute('/')
     }
   }
 
