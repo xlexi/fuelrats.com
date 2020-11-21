@@ -7,10 +7,20 @@ import wpApi from '~/services/wordpress'
 import { updatesResources } from '../reducers/frAPIResources'
 
 
-
+const debugstuff = {
+  request: async (config) => {
+    const res = await frApi.request(config)
+    if (config.url === '/oauth2/authorize') {
+      console.log('| response:', res)
+    }
+    return res
+  },
+}
 
 
 export const frApiRequest = axiosRequest(frApi, updatesResources('fuelrats'))
-export const frApiPlainRequest = axiosRequest(frApi)
+
+export const frApiPlainRequest = axiosRequest(debugstuff)
+
 export const stApiRequest = axiosRequest(stApi)
 export const wpApiRequest = axiosRequest(wpApi)

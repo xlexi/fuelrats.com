@@ -62,18 +62,17 @@ class Authorize extends React.Component {
   static async getInitialProps (ctx) {
     const { query, res, store } = ctx
 
-    const response = await store.dispatch(getClientOAuthPage(query))
-
     const userId = selectCurrentUserId(store.getState())
     console.log('=============================================================================')
     console.log('| userId:', userId)
+
+    const response = await store.dispatch(getClientOAuthPage(query))
 
     if (!isError(response)) {
       const { meta, payload } = response
 
       if (payload.redirect) {
         console.log('| redirect:', payload.redirect)
-        console.log('| response:', JSON.stringify(response))
         console.log('=============================================================================')
         pageRedirect(ctx, payload.redirect)
         return {}
