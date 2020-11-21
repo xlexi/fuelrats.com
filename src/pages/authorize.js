@@ -4,6 +4,7 @@ import React from 'react'
 import { authenticated } from '~/components/AppLayout'
 import ScopeView from '~/components/ScopeView'
 import { pageRedirect } from '~/helpers/gIPTools'
+import frApi from '~/services/fuelrats'
 import { connect } from '~/store'
 import { getClientOAuthPage } from '~/store/actions/authentication'
 import { selectCurrentUserId } from '~/store/selectors'
@@ -63,17 +64,23 @@ class Authorize extends React.Component {
     const { query, res, store } = ctx
 
     const userId = selectCurrentUserId(store.getState())
-    console.log('=============================================================================')
-    console.log('| userId:', userId)
+    const authBearer = frApi.defaults.headers.common.Authorization
 
     const response = await store.dispatch(getClientOAuthPage(query))
+
+    console.log('=============================================================================')
+    console.log('| userId:', userId)
+    console.log('| auth:', authBearer)
+    if (authBearer !== response.request.headers.Authorization) {
+      console.log('| CRITICAL | AUTH HEADER MISMATCH!')
+    }
+    console.log('| response:', response)
+    console.log('=============================================================================')
 
     if (!isError(response)) {
       const { meta, payload } = response
 
       if (payload.redirect) {
-        console.log('| redirect:', payload.redirect)
-        console.log('=============================================================================')
         pageRedirect(ctx, payload.redirect)
         return {}
       }
@@ -81,9 +88,6 @@ class Authorize extends React.Component {
       if (res && meta.response.headers['set-cookie']) {
         res.setHeader('set-cookie', meta.response.headers['set-cookie'])
       }
-
-      console.log('| newAuth:', payload)
-      console.log('=============================================================================')
 
       return { client: payload }
     }
