@@ -73,6 +73,7 @@ class Authorize extends React.Component {
 
       if (payload.redirect) {
         console.log('| redirect:', payload.redirect)
+        console.log('=============================================================================')
         pageRedirect(ctx, payload.redirect)
         return {}
       }
