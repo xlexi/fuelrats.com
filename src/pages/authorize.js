@@ -6,6 +6,7 @@ import ScopeView from '~/components/ScopeView'
 import { pageRedirect } from '~/helpers/gIPTools'
 import { connect } from '~/store'
 import { getClientOAuthPage } from '~/store/actions/authentication'
+import { selectCurrentUserId } from '~/store/selectors'
 
 
 
@@ -63,10 +64,15 @@ class Authorize extends React.Component {
 
     const response = await store.dispatch(getClientOAuthPage(query))
 
+    const userId = selectCurrentUserId(store.getState())
+    console.log('=============================================================================')
+    console.log('| userId:', userId)
+
     if (!isError(response)) {
       const { meta, payload } = response
 
       if (payload.redirect) {
+        console.log('| redirect:', payload.redirect)
         pageRedirect(ctx, payload.redirect)
         return {}
       }
@@ -74,6 +80,9 @@ class Authorize extends React.Component {
       if (res && meta.response.headers['set-cookie']) {
         res.setHeader('set-cookie', meta.response.headers['set-cookie'])
       }
+
+      console.log('| newAuth:', payload)
+      console.log('=============================================================================')
 
       return { client: payload }
     }
