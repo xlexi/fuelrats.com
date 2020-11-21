@@ -71,9 +71,6 @@ class Authorize extends React.Component {
     console.log('=============================================================================')
     console.log('| userId:', userId)
     console.log('| auth:', authBearer)
-    if (authBearer !== response.request.headers.Authorization) {
-      console.log('| CRITICAL | AUTH HEADER MISMATCH!')
-    }
     console.log('| response:', response)
     console.log('=============================================================================')
 
