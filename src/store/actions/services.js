@@ -11,7 +11,7 @@ const debugstuff = {
   request: async (config) => {
     const res = await frApi.request(config)
     if (config.url === '/oauth2/authorize') {
-      console.log('| response:', JSON.stringify(res))
+      console.log('| response:', res)
     }
     return res
   },
